@@ -1,2 +1,3 @@
-# advent-of-code-2023
-Advent of Code 2023
+# Advent of Code 🎄
+
+My personal adventures in the [Advent of Code](https://adventofcode.com/).
