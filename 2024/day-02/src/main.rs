@@ -64,7 +64,17 @@ fn solve(reports: &Vec<Vec<i32>>, dampener: bool) -> usize {
                     if safe(&new_report) == SafeResult::Ok
                         || safe(&new_report_two) == SafeResult::Ok
                     {
-                        num_dampened_safe += 1
+                        num_dampened_safe += 1;
+                        continue;
+                    }
+
+                    // The first level may have given us the wrong direction
+                    if i == 2 {
+                        let mut new_report_three = report.clone();
+                        new_report_three.remove(0);
+                        if safe(&new_report_three) == SafeResult::Ok {
+                            num_dampened_safe += 1;
+                        }
                     }
                 }
             }
