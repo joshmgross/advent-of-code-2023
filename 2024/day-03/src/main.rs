@@ -4,15 +4,28 @@ use regex::Regex;
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let input = include_str!("../input.txt");
 
-    let re: Regex = Regex::new(r"mul\((\d+),(\d+)\)").unwrap();
+    let re: Regex = Regex::new(r"mul\((\d+),(\d+)\)|(do\(\))|(don\'t\(\))").unwrap();
 
-    // let mut fields: Vec<(i64, i64)> = vec![];
-    let mut sum = 0;
-    for (_, [a, b]) in re.captures_iter(input).map(|caps| caps.extract()) {
-        sum += a.parse::<i32>()? * b.parse::<i32>()?;
+    let mut enabled = true;
+    let mut sum_part_one = 0;
+    let mut sum_part_two = 0;
+    for cap in re.captures_iter(input) {
+        match &cap[0] {
+            "do()" => enabled = true,
+            "don't()" => enabled = false,
+            _ => {
+                let a = &cap[1].parse::<i32>()?;
+                let b = &cap[2].parse::<i32>()?;
+                sum_part_one += a * b;
+                if enabled {
+                    sum_part_two += a * b;
+                }
+            }
+        }
     }
 
-    println!("{}", sum);
+    println!("{}", sum_part_one);
+    println!("{}", sum_part_two);
 
     Ok(())
 }
