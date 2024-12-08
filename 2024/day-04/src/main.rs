@@ -10,14 +10,18 @@ fn main() {
         word_search.push(line.chars().collect())
     }
 
-    let mut total = 0;
+    let mut total_xmas = 0;
+    let mut total_x_mas = 0;
     for i in 0..word_search.len() {
         for j in 0..word_search[i].len() {
-            total += find_xmas(&word_search, i, j)
+            total_xmas += find_xmas(&word_search, i, j);
+            total_x_mas += if has_x_mas(&word_search, i, j) { 1 } else { 0 };
         }
     }
 
-    print!("{}", total);
+    println!("{}", total_xmas);
+
+    println!("{}", total_x_mas);
 }
 
 // Returns the number of times "XMAS" appears at the given location
@@ -52,6 +56,56 @@ fn find_xmas(word_search: &Vec<Vec<char>>, i: usize, j: usize) -> usize {
         }
     }
     return found;
+}
+
+// Has MAS in the shape of an X (part 2)
+fn has_x_mas(word_search: &Vec<Vec<char>>, i: usize, j: usize) -> bool {
+    if word_search[i][j] != 'A' {
+        return false;
+    }
+
+    // Search from the center 'A'
+
+    // Ensure there's space for the 4 corners
+    if i == 0 || i >= word_search.len() - 1 || j == 0 || j >= word_search[i].len() - 1 {
+        return false;
+    }
+
+    // \
+    match word_search[i - 1][j - 1] {
+        'M' => {
+            if word_search[i + 1][j + 1] != 'S' {
+                return false;
+            }
+        }
+        'S' => {
+            if word_search[i + 1][j + 1] != 'M' {
+                return false;
+            }
+        }
+        _ => {
+            return false;
+        }
+    }
+
+    // /
+    match word_search[i - 1][j + 1] {
+        'M' => {
+            if word_search[i + 1][j - 1] != 'S' {
+                return false;
+            }
+        }
+        'S' => {
+            if word_search[i + 1][j - 1] != 'M' {
+                return false;
+            }
+        }
+        _ => {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 // find_adjacent_char determines if search_char is in any adjacent squares to Point
